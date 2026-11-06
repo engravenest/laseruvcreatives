@@ -1,0 +1,41 @@
+const fs = require('node:fs');
+const vm = require('node:vm');
+const assert = require('node:assert/strict');
+const ts = require('typescript');
+function load(file, deps={}) {
+ const exports = {};
+ const code = ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020}}).outputText;
+ vm.runInNewContext(code,{exports,require:name=>deps[name] || require(name),console});
+ return exports;
+}
+const utils=load('src/lib/utils.ts');
+const shipping=load('src/lib/shipping.ts',{'./utils':utils});
+const address={fullName:'Test Customer',phoneNumber:'03001234567',city:'Lahore',province:'Punjab',addressLine:'House 1, Test Street'};
+let addresses=[],customer={id:'test',email:'test@example.com'},created=[];
+const db={getProductById:()=>({price:1000,inStock:true,name:'Test Product'}),getUserById:()=>({addresses_json:JSON.stringify(addresses)}),updateUser:(_id,data)=>{addresses=JSON.parse(data.addressesJson);return {addresses_json:data.addressesJson};},createOrder:data=>{created.push(data);return data;}};
+const deps={'@/lib/shipping':shipping,'@/lib/serverDb':{serverDb:db},'@/lib/auth':{getAuthenticatedCustomer:async()=>customer,getAuthenticatedAdmin:async()=>null},'next/server':{NextResponse:{json:(body,options)=>({body,status:options?.status||200})}}};
+const orders=load('src/app/api/orders/route.ts',deps);
+const profile=load('src/app/api/customer/profile/route.ts',deps);
+const post=payload=>orders.POST({json:async()=>payload});
+const payload={shippingAddress:address,items:[{productId:'p1',quantity:2,unitPrice:1}],shippingFee:0,total:2};
+(async()=>{
+ assert.equal(shipping.getShippingFee('Punjab'),299);
+ for(const province of shipping.SHIPPING_PROVINCES.filter(p=>p!=='Punjab'))assert.equal(shipping.getShippingFee(province),399);
+ assert.equal((await post({...payload,shippingAddress:null})).status,400);
+ assert.equal(created.length,0);
+ let result=await post(payload);
+ assert.equal(result.status,201);assert.equal(result.body.order.total,2299);assert.equal(addresses.length,1);
+ await post(payload);assert.equal(addresses.length,1);
+ result=await post({...payload,shippingAddress:{...address,province:'Sindh',city:'Karachi'}});
+ assert.equal(result.body.order.total,2399);
+ addresses=Array.from({length:5},(_,i)=>({...address,id:String(i),addressLine:'House '+i}));
+ const before=created.length;
+ assert.equal((await post(payload)).status,400);assert.equal(created.length,before);
+ assert.equal((await post({...payload,shippingAddress:addresses[0]})).status,201);
+ assert.equal((await profile.PUT({json:async()=>({savedAddresses:[...addresses,address]})})).status,400);
+ assert.equal((await profile.PUT({json:async()=>({savedAddresses:[{...address,addressLine:''}]})})).status,400);
+ assert.equal((await profile.PUT({json:async()=>({savedAddresses:addresses})})).status,200);
+ customer=null;
+ result=await post(payload);assert.equal(result.status,201);assert.equal(result.body.order.userId,null);
+ console.log('PASS: province rates, server totals, required address, saved-address reuse, five-address limit, profile validation, guest checkout.');
+})().catch(error=>{console.error(error);process.exitCode=1;});

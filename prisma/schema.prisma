@@ -1,0 +1,128 @@
+// LaserUVCreatives - Prisma Schema for PostgreSQL / Neon
+// Documentation: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id                  String      @id @default(cuid())
+  slug                String      @unique
+  name                String
+  tagline             String?
+  description         String
+  detailedDescription String?
+  price               Int
+  originalPrice       Int?
+  categorySlug        String
+  categoryName        String
+  images              String[]    @default([])
+  inStock             Boolean     @default(true)
+  rating              Float       @default(5.0)
+  reviewsCount        Int         @default(1)
+  badge               String?
+  customization       Json
+  specs               Json?
+  includedItems       String[]    @default([])
+  deliveryEstimate    String?     @default("2–3 business days across Pakistan via TCS")
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  orderItems          OrderItem[]
+
+  @@map("products")
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique // e.g. "LUC-1001"
+  customerName    String
+  customerPhone   String
+  customerEmail   String?
+  city            String
+  province        String
+  addressLine     String
+  nearestLandmark String?
+  postalCode      String?
+  paymentMethod   String      @default("Cash on Delivery (COD)")
+  paymentStatus   String      @default("unpaid") // unpaid, paid_on_delivery
+  subtotal        Int
+  shippingFee     Int         @default(0)
+  total           Int
+  status          String      @default("pending_confirmation") // pending_confirmation, confirmed, in_engraving, dispatched, delivered, cancelled
+  courierCarrier  String?
+  courierTracking String?
+  dispatchedAt    DateTime?
+  notes           String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id                  String   @id @default(cuid())
+  orderId             String
+  order               Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId           String?
+  product             Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productSlug         String
+  productName         String
+  unitPrice           Int
+  quantity            Int      @default(1)
+  image               String
+  selectedVariants    Json?
+  engravingText       String?
+  fontChoice          String?
+  engravingLocation   String?
+  logoFileName        String?
+  specialInstructions String?
+
+  @@map("order_items")
+}
+
+model BulkQuoteLead {
+  id                        String   @id @default(cuid())
+  quoteNumber               String   @unique // e.g. "QUOTE-301"
+  fullName                  String
+  companyName               String?
+  whatsappNumber            String
+  email                     String?
+  productName               String
+  quantity                  String
+  deliveryCity              String
+  requiredDate              String?
+  customizationRequirements String
+  logoFileName              String?
+  additionalRequirements    String?
+  status                    String   @default("new") // new, contacted, quote_sent, converted, declined
+  quotedAmountPKR           Int?
+  notes                     String?
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+
+  @@map("bulk_quotes")
+}
+
+model StoreSettings {
+  id                    String   @id @default("default")
+  storeName             String   @default("LaserUVCreatives")
+  tagline               String   @default("Custom Laser & UV Engraved Gifts & Essentials")
+  whatsappNumber        String   @default("923327009017")
+  supportEmail          String   @default("engravenest@gmail.com")
+  studioAddress         String   @default("Main Boulevard, Gulberg III / DHA Phase 5, Lahore, Pakistan")
+  defaultCourier        String   @default("TCS")
+  announcementText      String   @default("✨ Free Precision Laser Engraving & Nationwide Cash on Delivery (COD) across Pakistan")
+  announcementEnabled   Boolean  @default(true)
+  freeShippingThreshold Int      @default(2000)
+  minimumOrderValue     Int      @default(500)
+  currencySymbol        String   @default("Rs.")
+  updatedAt             DateTime @updatedAt
+
+  @@map("store_settings")
+}
