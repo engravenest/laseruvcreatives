@@ -1,6 +1,6 @@
 # LaserUVCreatives Implementation Plan
 
-Updated: 2026-11-06. The phases below retain the original roadmap, with corrected authentication and persistence terminology. They do not certify current runtime behavior.
+Updated: 2026-11-09. The phases below retain the original roadmap, with corrected authentication and persistence terminology. They do not certify current runtime behavior.
 
 ## Current follow-up priorities
 
@@ -178,3 +178,7 @@ The site uses light styling as its fallback and follows device color preference 
 ## Completed catalog extension (2026-11-06)
 
 Category editing, product/category SEO, multiple product memberships, specification editing, hosted video IDs, and transactional slug redirects are implemented. Next deployment checks should include the configured public origin, video embedding permissions, and persistent SQLite storage. Validation is recorded in `tasks.md`.
+
+## Completed website management extension (2026-11-09)
+
+Dashboard page/section editing and custom draft pages, page SEO, persisted storefront colors with previews, and per-customer/customer-assigned coupons are implemented locally. Coupons use server-side pricing and atomic usage tracking. Next deployment step: reconcile existing hosting edits with GitHub, back up live SQLite/uploads, deploy code, build, and restart. The older general Store Settings and bulk-lead browser-storage follow-ups are separate from these new persisted editors.

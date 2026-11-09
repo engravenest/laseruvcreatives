@@ -1,4 +1,5 @@
-export default function WhyUs() {
+import type { SiteSection } from "@/types/site";
+export default function WhyUs({ section }: { section?: SiteSection }) {
   const pillars = [
     {
       title: "Personalized Products",
@@ -59,12 +60,8 @@ export default function WhyUs() {
           <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
             The LaserUVCreatives Promise
           </span>
-          <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
-            Why Choose LaserUVCreatives?
-          </h2>
-          <p className="mt-3 text-base text-zinc-600 dark:text-zinc-400">
-            We combine high-tech precision engraving machines with genuine passion for meaningful gifting.
-          </p>
+          <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">{section?.title ?? <> Why Choose LaserUVCreatives? </>}</h2>
+          <p className="mt-3 text-base text-zinc-600 dark:text-zinc-400">{section?.body ?? <> We combine high-tech precision engraving machines with genuine passion for meaningful gifting. </>}</p>
         </div>
 
         <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

@@ -1,3 +1,4 @@
+import { checkCoupon, couponSchema } from "@/lib/coupons";
 
 import { DatabaseSync } from "node:sqlite";
 import path from "node:path";
@@ -18,7 +19,7 @@ declare global {
 
 let catalogMigrated = false;
 
-function getDatabase(): DatabaseSync {
+export function getDatabase(): DatabaseSync {
   if (!global.__laseruv_db) {
     const dir = path.dirname(DB_PATH);
     if (!fs.existsSync(dir)) {
@@ -762,6 +763,23 @@ export const serverDb = {
 
   createOrder(data: any) {
     const db = getDatabase();
+    couponSchema(db);
+    return transaction(db, () => {
+      const pricedItems = (data.items || []).map((item: any) => {
+        const product = this.getProductById(item.productId);
+        if (!product || !product.inStock || !Number.isSafeInteger(item.quantity) || item.quantity < 1) throw new Error("Product availability changed. Please review your cart.");
+        return { ...item, unitPrice: product.price, productName: product.name };
+      });
+      const subtotal = pricedItems.reduce((sum: number, item: any) => sum + item.unitPrice * item.quantity, 0);
+      const applied = data.couponCode ? checkCoupon(db, data.couponCode, data.userId, subtotal) : null;
+      const order = this.createOrderRow({ ...data, items: pricedItems, subtotal, total: subtotal + Number(data.shippingFee || 0) - (applied?.discount || 0) });
+      if (applied) db.prepare("INSERT INTO coupon_uses (order_id, coupon_id, user_id, discount, code) VALUES (?, ?, ?, ?, ?)").run(order!.id, applied.coupon.id, data.userId, applied.discount, applied.coupon.code);
+      return this.getOrderById(order!.id);
+    });
+  },
+
+  createOrderRow(data: any) {
+    const db = getDatabase();
     const now = new Date().toISOString();
     const id = data.id || `order-${Date.now()}`;
     const orderNumber = data.orderNumber || `LUC-${Math.floor(100000 + Math.random() * 900000)}`;
@@ -1007,6 +1025,9 @@ function formatProductRow(row: any) {
 }
 
 function formatOrderRow(row: any, items: any[]) {
+  const db = getDatabase();
+  couponSchema(db);
+  const coupon = db.prepare("SELECT code, discount FROM coupon_uses WHERE order_id = ?").get(row.id);
   return {
     id: row.id,
     orderNumber: row.order_number,
@@ -1044,6 +1065,8 @@ function formatOrderRow(row: any, items: any[]) {
     })),
     paymentMethod: row.payment_method,
     paymentStatus: row.payment_status,
+    couponCode: coupon ? String(coupon.code) : undefined,
+    discount: coupon ? Number(coupon.discount) : 0,
     subtotal: row.subtotal,
     shippingFee: row.shipping_fee,
     total: row.total,

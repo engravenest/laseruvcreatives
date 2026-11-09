@@ -1,14 +1,17 @@
 "use client";
 
+import StorefrontTheme from "@/components/site/StorefrontTheme";
+import type { SiteColors } from "@/types/site";
 import { usePathname } from "next/navigation";
 import CartAwareHeader from "@/components/layout/CartAwareHeader";
 import Footer from "@/components/layout/Footer";
 
 interface Props {
   children: React.ReactNode;
+  colors: SiteColors;
 }
 
-export default function ConditionalStorefrontLayout({ children }: Props) {
+export default function ConditionalStorefrontLayout({ children, colors }: Props) {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith("/admin");
 
@@ -17,10 +20,10 @@ export default function ConditionalStorefrontLayout({ children }: Props) {
   }
 
   return (
-    <>
+    <StorefrontTheme initial={colors}>
       <CartAwareHeader />
       <main className="flex-1">{children}</main>
       <Footer />
-    </>
+    </StorefrontTheme>
   );
 }

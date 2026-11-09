@@ -1,8 +1,9 @@
 "use client";
+import type { SiteSection } from "@/types/site";
 import { useCategories } from "@/lib/useCategories";
 import Image from "next/image";
 
-export default function CategorySection() {
+export default function CategorySection({ section }: { section?: SiteSection }) {
   const CATEGORIES = useCategories();
   return (
     <section id="categories" className="py-20 bg-zinc-50 dark:bg-zinc-950/50">
@@ -12,12 +13,8 @@ export default function CategorySection() {
           <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
             Laser &amp; UV Collections
           </span>
-          <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
-            Shop by Category
-          </h2>
-          <p className="mt-3 text-base text-zinc-600 dark:text-zinc-400">
-            Select from our initial lineup of personalized products, each carefully prepared and permanently marked in our Pakistan workshop.
-          </p>
+          <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">{section?.title ?? <> Shop by Category </>}</h2>
+          <p className="mt-3 text-base text-zinc-600 dark:text-zinc-400">{section?.body ?? <> Select from our initial lineup of personalized products, each carefully prepared and permanently marked in our Pakistan workshop. </>}</p>
         </div>
 
         {/* Categories Grid: 2 top large cards + 3 bottom cards for harmonious visual rhythm */}

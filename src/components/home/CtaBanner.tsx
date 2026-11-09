@@ -1,4 +1,5 @@
-export default function CtaBanner() {
+import type { SiteSection } from "@/types/site";
+export default function CtaBanner({ section }: { section?: SiteSection }) {
   return (
     <section id="contact" className="py-16 sm:py-20 bg-gradient-to-r from-amber-600 via-amber-700 to-zinc-900 text-white relative overflow-hidden">
       {/* Decorative background glow */}
@@ -12,12 +13,8 @@ export default function CtaBanner() {
               <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1 text-xs font-semibold text-amber-300 border border-white/15">
                 <span>🇵🇰 Direct Engraving Studio in Pakistan</span>
               </span>
-              <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">
-                Ready to Create Something Truly Meaningful?
-              </h2>
-              <p className="mt-4 text-base sm:text-lg text-zinc-200 max-w-2xl leading-relaxed">
-                Whether you need a single engraved pen for a loved one or 500 branded gift boxes for a corporate annual event, we deliver crisp precision with nationwide Cash on Delivery.
-              </p>
+              <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">{section?.title ?? <> Ready to Create Something Truly Meaningful? </>}</h2>
+              <p className="mt-4 text-base sm:text-lg text-zinc-200 max-w-2xl leading-relaxed">{section?.body ?? <> Whether you need a single engraved pen for a loved one or 500 branded gift boxes for a corporate annual event, we deliver crisp precision with nationwide Cash on Delivery. </>}</p>
 
               {/* Value Badges */}
               <div className="mt-6 flex flex-wrap items-center gap-3 text-xs text-zinc-200">

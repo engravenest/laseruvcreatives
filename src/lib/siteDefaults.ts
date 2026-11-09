@@ -1,0 +1,15 @@
+import type { SiteColors, SitePage } from "@/types/site";
+export const DEFAULT_COLORS: SiteColors = { primary: "#f59e0b", lightBackground: "#fafafa", lightSurface: "#ffffff", lightText: "#18181b", darkBackground: "#09090b", darkSurface: "#18181b", darkText: "#fafafa" };
+export const COLOR_PRESETS = [
+  { name: "Amber", colors: DEFAULT_COLORS },
+  { name: "Emerald", colors: { ...DEFAULT_COLORS, primary: "#10b981", lightBackground: "#f0fdf4", darkBackground: "#052e16" } },
+  { name: "Royal blue", colors: { ...DEFAULT_COLORS, primary: "#3b82f6", lightBackground: "#eff6ff", darkBackground: "#0f172a" } },
+  { name: "Rose", colors: { ...DEFAULT_COLORS, primary: "#f43f5e", lightBackground: "#fff1f2", darkBackground: "#1c1017" } },
+];
+export const BUILTIN_PAGES: SitePage[] = [
+  { id: "home", slug: "", title: "Custom Engraved Gifts Made Just for You", description: "Transform everyday essentials into timeless personal keepsakes. We customize executive pens, natural wooden cases, insulated bottles, and luxury gift sets with high-precision laser & UV engraving.", sections: [{"id": "categories", "title": "Shop by Category", "body": "Select from our initial lineup of personalized products, each carefully prepared and permanently marked in our Pakistan workshop.", "enabled": true}, {"id": "featured", "title": "Featured Personalized Products", "body": "Laser-marked with recipient names, bespoke quotes, or brand logos.", "enabled": true}, {"id": "how", "title": "How It Works", "body": "From your creative idea to a customized engraved masterpiece delivered right to your doorstep in four easy steps.", "enabled": true}, {"id": "why", "title": "Why Choose LaserUVCreatives?", "body": "We combine high-tech precision engraving machines with genuine passion for meaningful gifting.", "enabled": true}, {"id": "reviews", "title": "What Our Customers Say", "body": "Trusted by gift-givers and corporate executives across Pakistan.", "enabled": true}, {"id": "cta", "title": "Ready to Create Something Truly Meaningful?", "body": "Whether you need a single engraved pen for a loved one or 500 branded gift boxes for a corporate annual event, we deliver crisp precision with nationwide Cash on Delivery.", "enabled": true}] },
+  { id: "shop", slug: "shop", title: "Shop Personalized Gifts", description: "Discover personalized pens, bottles and gift sets, made just for you.", sections: [] },
+  { id: "contact", slug: "contact", title: "Contact LaserUVCreatives", description: "Get in touch with our team for product questions, custom designs, or order support.", sections: [] },
+  { id: "bulk-orders", slug: "bulk-orders", title: "Bulk & Custom Orders", description: "Create personalized gifts for your company, team, or special occasion.", sections: [] },
+].map(page => ({ ...page, seo: { title: "", description: "", keywords: "" }, published: true, builtIn: true, showInFooter: false }));
+export const RESERVED_SLUGS = new Set(["admin", "api", "products", "shop", "contact", "bulk-orders", "cart", "checkout", "account", "login", "register", "forgot-password", "_next", "images", "uploads", "favicon.ico", "robots.txt", "sitemap.xml"]);

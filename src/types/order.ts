@@ -36,6 +36,8 @@ export interface Order {
   items: CartItem[];
   paymentMethod: PaymentMethod;
   paymentStatus: "unpaid" | "paid_on_delivery";
+  couponCode?: string;
+  discount?: number;
   subtotal: number; // PKR
   shippingFee: number; // PKR
   total: number; // PKR

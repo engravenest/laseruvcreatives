@@ -24,3 +24,9 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Dashboard-configured storefront colors; admin retains its editing palette. */
+.storefront { background: var(--site-light-bg); color: var(--site-light-text); }
+.dark .storefront { background: var(--site-dark-bg); color: var(--site-dark-text); }
+.storefront :is(.text-zinc-900, .text-zinc-800) { color: var(--site-light-text); }
+.dark .storefront :is(.dark\:text-zinc-100, .dark\:text-zinc-50, .dark\:text-white) { color: var(--site-dark-text); }

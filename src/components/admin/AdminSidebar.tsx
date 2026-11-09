@@ -17,6 +17,9 @@ export default function AdminSidebar({ isOpen, onClose }: Props) {
   const newLeadsCount = bulkLeads.filter((l) => l.status === "new").length;
 
   const navItems = [
+    { name: "Website Pages", href: "/admin/pages", icon: <span aria-hidden="true">▤</span> },
+    { name: "Coupons", href: "/admin/coupons", icon: <span aria-hidden="true">%</span> },
+    { name: "Website Colors", href: "/admin/appearance", icon: <span aria-hidden="true">◉</span> },
     {
       name: "Dashboard",
       href: "/admin",

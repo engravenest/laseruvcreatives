@@ -1,3 +1,4 @@
+import { StoreInputError } from "@/lib/coupons";
 import { randomUUID } from "node:crypto";
 import { getShippingFee, MAX_SAVED_ADDRESSES, sameShippingAddress, validateShippingAddress } from "@/lib/shipping";
 import { NextRequest, NextResponse } from "next/server";
@@ -34,6 +35,7 @@ export async function GET(req: NextRequest) {
       { status: 401 }
     );
   } catch (error: any) {
+    if (error instanceof StoreInputError) return NextResponse.json({ error: error.message }, { status: 400 });
     console.error("Orders GET error:", error);
     return NextResponse.json({ error: "Failed to fetch orders." }, { status: 500 });
   }
@@ -43,6 +45,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
+    if (body.couponCode !== undefined && (typeof body.couponCode !== "string" || body.couponCode.length > 40)) return NextResponse.json({ error: "Invalid coupon code." }, { status: 400 });
     const addressError = validateShippingAddress(body.shippingAddress);
     if (addressError) return NextResponse.json({ error: addressError }, { status: 400 });
     if (!Array.isArray(body.items) || body.items.length === 0) {
@@ -98,6 +101,7 @@ export async function POST(req: NextRequest) {
       order: created,
     }, { status: 201 });
   } catch (error: any) {
+    if (error instanceof StoreInputError) return NextResponse.json({ error: error.message }, { status: 400 });
     console.error("Order creation error:", error);
     return NextResponse.json(
       { error: "Failed to create order in database.", details: String(error) },

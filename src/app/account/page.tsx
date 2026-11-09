@@ -46,6 +46,8 @@ interface CustomerOrder {
   items: OrderItem[];
   paymentMethod: string;
   paymentStatus: string;
+  couponCode?: string;
+  discount?: number;
   subtotal: number;
   shippingFee: number;
   total: number;
@@ -931,7 +933,8 @@ export default function CustomerDashboardPage() {
               <div className="rounded-xl bg-zinc-50/60 dark:bg-zinc-950/60 p-3 border border-zinc-200/80 dark:border-zinc-800/80 flex flex-col justify-between">
                 <div>
                   <h5 className="font-bold text-zinc-700 dark:text-zinc-300 mb-1">Payment Breakdown</h5>
-                  <div className="flex justify-between text-zinc-600 dark:text-zinc-400 mt-1">
+                  {(selectedOrder.discount || 0) > 0 && <div className="flex justify-between text-sm text-green-700 dark:text-green-400"><span>Coupon ({selectedOrder.couponCode})</span><span>−{formatPKR(selectedOrder.discount || 0)}</span></div>}
+              <div className="flex justify-between text-zinc-600 dark:text-zinc-400 mt-1">
                     <span>Subtotal:</span>
                     <span>{formatPKR(selectedOrder.subtotal)}</span>
                   </div>

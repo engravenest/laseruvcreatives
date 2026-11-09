@@ -22,6 +22,9 @@ export default function AdminTopbar({ onOpenSidebar }: Props) {
         return "Dashboard";
       case "orders":
         return "Orders Fulfillment";
+      case "pages": return "Website Pages";
+      case "coupons": return "Coupons";
+      case "appearance": return "Website Colors";
       case "categories":
         return "Categories";
       case "products":

@@ -1,4 +1,5 @@
 "use client";
+import type { SiteSection } from "@/types/site";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -11,10 +12,11 @@ import { useCart } from "@/context/CartContext";
 import { useLiveProducts } from "@/lib/storeSync";
 
 interface FeaturedProductsProps {
+  section?: SiteSection;
   onUpdateCartCount?: (newCount: number) => void;
 }
 
-export default function FeaturedProducts({ onUpdateCartCount }: FeaturedProductsProps) {
+export default function FeaturedProducts({ onUpdateCartCount, section }: FeaturedProductsProps) {
   const liveProducts = useLiveProducts(PRODUCTS);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -62,12 +64,8 @@ export default function FeaturedProducts({ onUpdateCartCount }: FeaturedProducts
               <span>•</span>
               <span>Cash on Delivery</span>
             </div>
-            <h2 className="text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
-              Featured Personalized Products
-            </h2>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-              Laser-marked with recipient names, bespoke quotes, or brand logos.
-            </p>
+            <h2 className="text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">{section?.title ?? <> Featured Personalized Products </>}</h2>
+            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{section?.body ?? <> Laser-marked with recipient names, bespoke quotes, or brand logos. </>}</p>
           </div>
 
           <Link

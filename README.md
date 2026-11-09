@@ -1,6 +1,6 @@
 # LaserUVCreatives
 
-Updated: 2026-11-06.
+Updated: 2026-11-09.
 
 Personalized laser engraving and UV gift store for Pakistan, with PKR pricing, Cash on Delivery, customer accounts, and a separate admin panel. Built with Next.js 16.3.6, React 19, TypeScript, Tailwind CSS 4, and SQLite.
 
@@ -63,3 +63,11 @@ The catalog regression script creates a temporary database and does not modify s
 | [.env.example](.env.example) | Environment variable reference |
 
 Application code is in `src/`. Read `src/lib/serverDb.ts` for active persistence, `src/types/product.ts` for catalog types, and `src/app/admin/` for the management screens.
+
+## Website management from the dashboard
+
+- **Website Pages** (`/admin/pages`): edit public-page titles/intros and home section text, add sections, manage SEO, create drafts, publish custom pages, and add footer links. Content uses plain text with line breaks.
+- **Coupons** (`/admin/coupons`): fixed/percentage discounts across all products, active/inactive/delete, customer email assignment, expiry and usage limits. Customers sign in to redeem; shipping stays unchanged.
+- **Website Colors** (`/admin/appearance`): choose Amber, Emerald, Royal blue or Rose, or enter custom hex codes. Preview before Save; supports light/dark colors.
+
+These settings persist in the active SQLite database. Local saves affect the local website; after deploying the code, live dashboard saves affect the live website. Test with `node scratch/check-site-management.cjs`.

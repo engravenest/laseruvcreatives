@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const product = findProduct((await params).slug);
   const title = product.seo?.title || `${product.name} | LaserUVCreatives (Pakistan)`;
   const description = product.seo?.description || product.description;
-  return { metadataBase: await catalogMetadataBase(), title: { absolute: title }, description, keywords: product.seo?.keywords?.split(",").map(keyword => keyword.trim()).filter(Boolean) || [], alternates: { canonical: `/products/${product.slug}` }, openGraph: { title, description, images: product.images }, twitter: { title, description } };
+  return { metadataBase: await catalogMetadataBase(), title: { absolute: title }, description, keywords: product.seo?.keywords?.split(",").map((keyword: string) => keyword.trim()).filter(Boolean) || [], alternates: { canonical: `/products/${product.slug}` }, openGraph: { title, description, images: product.images }, twitter: { title, description } };
 }
 export default async function ProductDetailPage({ params }: PageProps) {
   const product = findProduct((await params).slug);

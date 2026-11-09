@@ -1,5 +1,6 @@
 "use client";
 import { useCategories } from "@/lib/useCategories";
+import PageLinks from "@/components/site/PageLinks";
 import Link from "next/link";
 import { STORE_CONFIG } from "@/constants/store";
 
@@ -172,6 +173,7 @@ export default function Footer() {
                   Sign In / Register
                 </Link>
               </li>
+              <PageLinks />
             </ul>
           </div>
 

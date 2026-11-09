@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Keep build concurrency within shared-hosting resource limits.
+  experimental: {
+    cpus: 1,
+    webpackMemoryOptimizations: true,
+  },
 };
 
 export default nextConfig;

@@ -1,6 +1,6 @@
 # LaserUVCreatives Task Checklist
 
-Updated: 2026-11-06. Existing phases record implementation history. The catalog section records checks completed on 2026-11-06; documentation-only edits do not imply new runtime tests.
+Updated: 2026-11-09. Existing phases record implementation history. The catalog section records checks completed on 2026-11-06; documentation-only edits do not imply new runtime tests.
 
 ## Current follow-up checklist
 
@@ -152,3 +152,16 @@ The site uses light styling as its fallback and follows device color preference 
 ## Required engraving text (2026-11-06)
 
 - [x] On product details, require nonblank engraving text when text customization is enabled; mark the field required, show an inline error and focus it, and block both Add to Cart and Buy Now until filled.
+
+## Website management extension (2026-11-09)
+
+- [x] Add dashboard Website Pages, Coupons, and Website Colors sections.
+- [x] Persist page content, SEO keywords/title/description, draft/public state, and footer visibility.
+- [x] Add safe custom page rendering, reserved slug validation, public draft exclusion, and editor previews.
+- [x] Connect existing home section headings/intros and Home/Shop/Contact/Bulk Orders headers to saved content.
+- [x] Add persisted hex theme controls, four presets, light/dark previews and storefront-only application.
+- [x] Add fixed/percentage coupons, active/inactive/delete, expiry, minimum spend, per-user/global limits, and selected-customer emails.
+- [x] Add checkout Apply/Remove, authoritative discount totals, atomic redemption, and order-history discount displays.
+- [x] Run isolated `scratch/check-site-management.cjs` for CRUD, draft 404s, metadata, XSS-safe text, admin authorization, coupon restrictions, rollback, totals and persistence.
+- [x] Existing catalog regression checks, full TypeScript and targeted new-code ESLint passed.
+- [ ] Deploy this extension to Namecheap; preserve production database/uploads.

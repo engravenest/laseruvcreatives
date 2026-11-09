@@ -1,6 +1,6 @@
 # LaserUVCreatives System Specification
 
-Updated: 2026-11-06. Describes the current implementation; dated validation results are recorded in `tasks.md`.
+Updated: 2026-11-09. Describes the current implementation; dated validation results are recorded in `tasks.md`.
 
 ## 1. System Overview & Architecture
 
@@ -382,3 +382,15 @@ The SQLite catalog adds `products.catalog_json`, `categories`, and `catalog_redi
 Product pages and shop pages use request-time database data and generated SEO metadata. Category URLs remain `/shop?category=slug`; old product/category URLs permanently redirect (308). Public filters, home categories, and footer categories refresh from the APIs. Optional `NEXT_PUBLIC_SITE_URL` pins the canonical origin; otherwise metadata uses the request host. The bulk panel's nationwide-delivery sentence is removed.
 
 On product detail pages, the engraving text field (including Company Name or Custom Text) is required when text customization is enabled. Empty or whitespace-only values block Add to Cart and Buy Now, with a focused field and inline error. Logo-only products are unaffected.
+
+## Website management extension (2026-11-09)
+
+Admin navigation now includes `/admin/pages`, `/admin/coupons`, and `/admin/appearance`. Authenticated CRUD APIs live at `/api/admin/site/[resource]` for pages, coupons, and colors. `site_documents` stores pages/themes; `coupons` stores definitions; `coupon_uses` keeps the order ID, customer ID, code and actual discount. Migrations are additive.
+
+Pages: built-in Home, Shop, Contact and Bulk Orders have editable titles, introduction text and SEO title/description/keywords. Home also exposes section headings, introductory content and visibility for Categories, Featured Products, How It Works, Why Us, Reviews and CTA. Additional plain-text sections can be added. Existing interactive forms and catalog widgets remain functional. New single-segment URLs such as `/about-us` use draft/published status and optional footer links; drafts return 404 publicly. Saved slugs remain fixed. Editor previews do not publish automatically.
+
+Colors: Amber (#f59e0b), Emerald (#10b981), Royal blue (#3b82f6), and Rose (#f43f5e) presets plus custom six-digit hex values for primary color and light/dark backgrounds, surfaces and text. Preview is local until Save. Settings apply to the storefront, preserving the admin editing palette and the existing device/manual light-dark preference. Public `/api/site` exposes colors and published footer links, never coupon eligibility or drafts.
+
+Coupons: fixed PKR or whole-number percentage discounts, create/edit/activate/deactivate/delete, expiry in UTC, minimum subtotal, total usage limit (0 = unlimited), per-customer usage limit, and optional assigned email list. All products qualify. Customers must sign in with a verified account; guest checkout remains available without coupons. Checkout Apply validates prices via `/api/coupons/validate`; order placement checks again in a SQLite transaction and stores redemption atomically. One coupon per order; product discount is capped at subtotal and cannot consume shipping. Uses are counted on placement and are not automatically restored on cancellation. Deletion hides/deactivates the code while retaining historical usage and order totals.
+
+Live deployment requires pushing these source changes, pulling safely on hosting, building with Webpack and restarting. Live database and uploads must be preserved.

@@ -1,3 +1,6 @@
+import { getPage } from "@/lib/siteStore";
+import { pageMetadata } from "@/lib/pageMetadata";
+import PageSections from "@/components/site/PageSections";
 import { catalogMetadataBase } from "@/lib/catalogMetadata";
 import type { Metadata } from "next";
 import { permanentRedirect } from "next/navigation";
@@ -10,9 +13,10 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const params = await searchParams;
   const slug = typeof params.category === "string" ? params.category : "";
   const category = serverDb.getCategories().find(item => item.slug === slug);
+  if (!category) return pageMetadata(getPage("shop")!);
   const title = category?.seo?.title || (category ? `${category.name} | LaserUVCreatives` : "Shop | LaserUVCreatives");
   const description = category?.seo?.description || category?.description || "Shop personalized gifts and laser engraved products.";
-  return { metadataBase: await catalogMetadataBase(), title: { absolute: title }, description, keywords: category?.seo?.keywords?.split(",").map(keyword => keyword.trim()).filter(Boolean) || [], alternates: { canonical: category ? `/shop?category=${category.slug}` : "/shop" }, openGraph: { title, description }, twitter: { title, description } };
+  return { metadataBase: await catalogMetadataBase(), title: { absolute: title }, description, keywords: category?.seo?.keywords?.split(",").map((keyword: string) => keyword.trim()).filter(Boolean) || [], alternates: { canonical: category ? `/shop?category=${category.slug}` : "/shop" }, openGraph: { title, description }, twitter: { title, description } };
 }
 export default async function ShopPage({ searchParams }: Props) {
   const params = await searchParams;
@@ -28,5 +32,6 @@ export default async function ShopPage({ searchParams }: Props) {
       permanentRedirect(`/shop?${query}`);
     }
   }
-  return <ShopView initialProducts={serverDb.getProducts()} />;
+  const page = getPage("shop")!;
+  return <><ShopView initialProducts={serverDb.getProducts()} page={page} /><PageSections sections={page.sections} /></>;
 }

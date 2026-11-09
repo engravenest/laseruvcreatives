@@ -1,4 +1,5 @@
-export default function HowItWorks() {
+import type { SiteSection } from "@/types/site";
+export default function HowItWorks({ section }: { section?: SiteSection }) {
   const steps = [
     {
       step: "01",
@@ -56,12 +57,8 @@ export default function HowItWorks() {
           <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
             Simple &amp; Seamless Experience
           </span>
-          <h2 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
-            How It Works
-          </h2>
-          <p className="mt-3 text-base text-zinc-400">
-            From your creative idea to a customized engraved masterpiece delivered right to your doorstep in four easy steps.
-          </p>
+          <h2 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">{section?.title ?? <> How It Works </>}</h2>
+          <p className="mt-3 text-base text-zinc-400">{section?.body ?? <> From your creative idea to a customized engraved masterpiece delivered right to your doorstep in four easy steps. </>}</p>
         </div>
 
         <div className="mt-14 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">

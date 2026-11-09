@@ -1,6 +1,7 @@
+import type { SiteSection } from "@/types/site";
 import { MOCK_REVIEWS } from "@/data/mockReviews";
 
-export default function ReviewsSection() {
+export default function ReviewsSection({ section }: { section?: SiteSection }) {
   return (
     <section id="reviews" className="py-20 bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -10,12 +11,8 @@ export default function ReviewsSection() {
             <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
               Verified Feedback
             </span>
-            <h2 className="mt-1 text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
-              What Our Customers Say
-            </h2>
-            <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-              Trusted by gift-givers and corporate executives across Pakistan.
-            </p>
+            <h2 className="mt-1 text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">{section?.title ?? <> What Our Customers Say </>}</h2>
+            <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">{section?.body ?? <> Trusted by gift-givers and corporate executives across Pakistan. </>}</p>
           </div>
 
           <div className="flex items-center gap-2 rounded-xl bg-amber-50 px-4 py-2.5 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800">

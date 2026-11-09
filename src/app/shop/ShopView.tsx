@@ -1,5 +1,6 @@
 "use client";
 
+import type { SitePage } from "@/types/site";
 import { useState, useMemo, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -11,7 +12,7 @@ import SearchBar from "@/components/ui/SearchBar";
 import ProductFilters, { SortOption } from "@/components/product/ProductFilters";
 import ProductGrid from "@/components/product/ProductGrid";
 
-function ShopContent({ initialProducts }: { initialProducts: Product[] }) {
+function ShopContent({ initialProducts, page }: { initialProducts: Product[]; page: SitePage }) {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "all";
   const { addItem } = useCart();
@@ -123,12 +124,8 @@ function ShopContent({ initialProducts }: { initialProducts: Product[] }) {
               <span>•</span>
               <span>Cash on Delivery</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-zinc-900 dark:text-white">
-              Personalized &amp; Engraved Catalog
-            </h1>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400 max-w-2xl">
-              Explore our complete selection of customized metal pens, wooden keepsake cases, insulated bottles, and gift sets.
-            </p>
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-zinc-900 dark:text-white">{page.title}</h1>
+            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400 max-w-2xl">{page.description}</p>
           </div>
 
           {/* Search Bar */}
@@ -192,7 +189,7 @@ function ShopContent({ initialProducts }: { initialProducts: Product[] }) {
   );
 }
 
-export default function ShopView({ initialProducts }: { initialProducts: Product[] }) {
+export default function ShopView({ initialProducts, page }: { initialProducts: Product[]; page: SitePage }) {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950">
@@ -202,7 +199,7 @@ export default function ShopView({ initialProducts }: { initialProducts: Product
         </div>
       </div>
     }>
-      <ShopContent initialProducts={initialProducts} />
+      <ShopContent initialProducts={initialProducts} page={page} />
     </Suspense>
   );
 }

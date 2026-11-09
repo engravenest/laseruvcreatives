@@ -225,6 +225,7 @@ export default function AdminOrderDetailPage({ params }: Props) {
 
             {/* Financial Summary */}
             <div className="mt-6 border-t border-zinc-200 dark:border-zinc-800 pt-4 space-y-2">
+              {(order.discount || 0) > 0 && <div className="flex justify-between text-sm text-green-700 dark:text-green-400"><span>Coupon ({order.couponCode})</span><span>−{formatPKR(order.discount || 0)}</span></div>}
               <div className="flex justify-between text-xs text-zinc-600 dark:text-zinc-400">
                 <span>Subtotal</span>
                 <span>{formatPKR(order.subtotal)}</span>

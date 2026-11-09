@@ -1,6 +1,6 @@
 # LaserUVCreatives System Constitution
 
-Updated: 2026-11-06. This document defines required behavior. See `specification.md` for implemented behavior and `tasks.md` for remaining gaps.
+Updated: 2026-11-09. This document defines required behavior. See `specification.md` for implemented behavior and `tasks.md` for remaining gaps.
 
 ## 1. Identity, Vision & Market Context
 - **System Name**: LaserUVCreatives (LUC)
@@ -101,3 +101,10 @@ The site uses light styling as its fallback and follows device color preference 
 - Title changes preview a slug without writing data. Successful submission saves edits and old-slug redirects together; failed submissions must not change either.
 - A product has one primary category and may belong to additional categories. Category renames preserve every membership.
 - Product specifications and hosted-video IDs are admin editable. Only validated YouTube/Vimeo IDs may form embed URLs.
+
+## Dashboard-managed content, colors, and discounts (2026-11-09)
+
+- Page content, SEO, theme colors and coupon definitions are stored in SQLite; browser state is only an editor draft.
+- Custom pages default to drafts. Only published pages are public. Content is rendered as escaped text, never arbitrary admin HTML.
+- Coupon eligibility and discount totals are checked server-side using verified customer identity and catalog prices. Redemption and order persistence are atomic.
+- Discounts apply to product subtotals across all products; shipping is not discounted. Per-customer limits and selected-email eligibility are enforced.

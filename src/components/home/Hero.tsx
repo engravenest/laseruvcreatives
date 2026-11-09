@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function Hero() {
+export default function Hero({ title, description }: { title?: string; description?: string }) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 text-white">
       {/* Decorative ambient gradient glow */}
@@ -25,13 +25,13 @@ export default function Hero() {
                 Make It Personal
               </span>
               <span className="block leading-tight">
-                Custom Engraved Gifts Made Just for You
+                {title || "Custom Engraved Gifts Made Just for You"}
               </span>
             </h1>
 
             {/* Subtitle */}
             <p className="mt-5 max-w-xl text-base sm:text-lg leading-relaxed text-zinc-300">
-              Transform everyday essentials into timeless personal keepsakes. We customize executive pens, natural wooden cases, insulated bottles, and luxury gift sets with high-precision laser &amp; UV engraving.
+              {description || "Transform everyday essentials into timeless personal keepsakes. We customize executive pens, natural wooden cases, insulated bottles, and luxury gift sets with high-precision laser & UV engraving."}
             </p>
 
             {/* Value Highlights Pill Row */}

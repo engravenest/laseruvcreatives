@@ -1,3 +1,4 @@
+import { getColors } from "@/lib/siteStore";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import ConditionalStorefrontLayout from "@/components/layout/ConditionalStorefrontLayout";
@@ -14,6 +15,8 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "LaserUVCreatives | Custom Engraved Gifts Made Just for You (Pakistan)",
@@ -48,7 +51,7 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col bg-zinc-50 font-sans text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-50">
         <CustomerAuthProvider>
           <CartProvider>
-            <ConditionalStorefrontLayout>{children}</ConditionalStorefrontLayout>
+            <ConditionalStorefrontLayout colors={getColors()}>{children}</ConditionalStorefrontLayout>
           </CartProvider>
         </CustomerAuthProvider>
       </body>

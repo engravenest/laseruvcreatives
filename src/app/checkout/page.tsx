@@ -1,5 +1,6 @@
 "use client";
 
+import CouponBox, { type AppliedCoupon } from "@/components/product/CouponBox";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -53,7 +54,11 @@ export default function CheckoutPage() {
   const [orderNotes, setOrderNotes] = useState("");
 
   const shippingFee = getShippingFee(province);
-  const total = subtotal + shippingFee;
+  const [coupon, setCoupon] = useState<AppliedCoupon | null>(null);
+  const couponSignature = JSON.stringify([customer?.id, items.map(item => [item.productId, item.quantity, item.unitPrice])]);
+  const appliedCoupon = coupon?.signature === couponSignature ? coupon : null;
+  const discount = appliedCoupon?.discount || 0;
+  const total = subtotal + shippingFee - discount;
   const [savedAddresses, setSavedAddresses] = useState<(ShippingAddress & { id: string })[]>([]);
   const [submitError, setSubmitError] = useState("");
 
@@ -154,6 +159,8 @@ export default function CheckoutPage() {
       paymentMethod: "Cash on Delivery (COD)",
       paymentStatus: "unpaid",
       subtotal,
+      couponCode: appliedCoupon?.code,
+      discount,
       shippingFee,
       total,
       status: "pending_confirmation",
@@ -204,6 +211,7 @@ export default function CheckoutPage() {
       ``,
       `*Subtotal:* ${formatPKR(order.subtotal)}`,
       `*Delivery Charges:* ${order.shippingFee === 0 ? "Free (Nationwide)" : formatPKR(order.shippingFee)}`,
+      ...(order.discount ? [`*Coupon (${order.couponCode}):* -${formatPKR(order.discount)}`] : []),
       `*Total Amount (COD):* ${formatPKR(order.total)}`,
     ];
 
@@ -375,6 +383,7 @@ export default function CheckoutPage() {
 
               {/* Financial Totals */}
               <div className="pt-6 space-y-2 text-xs">
+                {(placedOrder.discount || 0) > 0 && <div className="flex justify-between text-green-700 dark:text-green-400"><span>Coupon ({placedOrder.couponCode})</span><span>−{formatPKR(placedOrder.discount || 0)}</span></div>}
                 <div className="flex justify-between text-zinc-600 dark:text-zinc-400">
                   <span>Subtotal</span>
                   <span>{formatPKR(placedOrder.subtotal)}</span>
@@ -794,6 +803,8 @@ export default function CheckoutPage() {
 
               {/* Price Calculations */}
               <div className="mt-6 border-t border-zinc-100 pt-4 space-y-2 dark:border-zinc-800 text-xs">
+                <CouponBox items={items} signature={couponSignature} applied={appliedCoupon} onChange={setCoupon} signedIn={Boolean(customer)} />
+                {discount > 0 && <div className="flex justify-between text-green-700 dark:text-green-400"><span>Coupon discount</span><span>−{formatPKR(discount)}</span></div>}
                 <div className="flex justify-between text-zinc-600 dark:text-zinc-400">
                   <span>Subtotal</span>
                   <span>{formatPKR(subtotal)}</span>
